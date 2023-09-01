@@ -1,18 +1,20 @@
 import selenium
 from selenium import webdriver
-
 from selenium.webdriver.common.by import By
 
 import time
-
+from datetime import datetime
 import re
 
-browser_driver_path = 'C:/Study/c4k/sellenium/chromedriver_win32/chromedriver.exe'
+browser_driver_path = 'D:/git/sellenium/parliament/chromedriver.exe'
 driver = webdriver.Chrome()
 
+# 결과 파일 경로
+result_file_path = 'result.text'
+
 # 수집 페이지 범위
-page_from = 1
-page_to = 10
+page_from = 1093
+page_to = 9715
 
 # 댓글 개수 패턴
 reply_reg_filter = re.compile(r'\[\d\]$')
@@ -20,10 +22,21 @@ reply_reg_filter = re.compile(r'\[\d\]$')
 # 수집 대상 사이트
 base_URL = 'https://gall.dcinside.com/board/lists/?id=agony&list_num=100&page='
 
-for page in range(page_from, page_to):
+f = open(result_file_path, 'a+t',encoding='UTF-8')
+
+for page in range(page_from, page_to+1):
     target_url = base_URL + str(page)
-    driver.get(target_url)
-    time.sleep(1)
+    bPassed = False
+
+    while bPassed==False:
+        try:
+            driver.get(target_url)
+            bPassed = True
+        except:
+            print("Missed page " + str(page))
+            time.sleep(60)
+
+    time.sleep(2)
 
     # table
     list_table = driver.find_element(By.XPATH,'//*[@id="container"]/section[1]/article[2]/div[2]/table/tbody')
@@ -59,8 +72,16 @@ for page in range(page_from, page_to):
         recommend = tr.find_element(By.CLASS_NAME,'gall_recommend').text
 
         #tr
-        tr_string = number+"|"+title+"|"+reply_cnt+"|"+writer+"|"+date+"|"+count+"|"+recommend
+        tr_string = number+"|"+title+"|"+reply_cnt+"|"+writer+"|"+date+"|"+count+"|"+recommend+"\n"
 
         #print
-        print(tr_string)
+        #print(tr_string)
+        f.write(tr_string)
+
+    if  page%10==0:
+        f.close()
+        f = open(result_file_path, 'a+t',encoding='UTF-8')
     
+    print('progress - '+ str(page) + ' - ' + str(datetime.now()))
+
+f.close()
