@@ -9,12 +9,18 @@ import re
 browser_driver_path = 'D:/git/sellenium/parliament/chromedriver.exe'
 driver = webdriver.Chrome()
 
-# 결과 파일 경로
-result_file_path = 'result.text'
-
 # 수집 페이지 범위
+<<<<<<< HEAD
 page_from = 6029
 page_to = 9000
+=======
+page_from = 9001
+page_to = 9715
+>>>>>>> 17b3cc3c34d27fa4d913b24aeb85e0dce97e5434
+
+# 결과 파일 경로
+result_file_path = 'result_'+str(page_from)+'_'+str(page_to)+'.text'
+
 
 # 댓글 개수 패턴
 reply_reg_filter = re.compile(r'\[\d\]$')
