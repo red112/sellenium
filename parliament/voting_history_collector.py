@@ -13,8 +13,8 @@ driver = webdriver.Chrome()
 result_file_path = 'result.text'
 
 # 수집 페이지 범위
-page_from = 1093
-page_to = 9715
+page_from = 6029
+page_to = 9000
 
 # 댓글 개수 패턴
 reply_reg_filter = re.compile(r'\[\d\]$')
@@ -53,7 +53,10 @@ for page in range(page_from, page_to+1):
         #reply
         reply_cnt = "#"
         replay_open_idx = title.rfind('[')
-        if title[-1]!=']' and replay_open_idx<0:
+
+        if len(title)<3:
+            reply_cnt="0"
+        elif  title[-1]!=']' and replay_open_idx<0:
             reply_cnt="0"
         else:
             reply_cnt = title[replay_open_idx+1:-1]
